@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  overflow-x: hidden !important;
+}
+
+.cm-scroller {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+}

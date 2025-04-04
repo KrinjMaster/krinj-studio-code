@@ -26,7 +26,7 @@ export default tseslint.config(
       "no-unused-vars": "warn",
       "no-console": "warn",
       "no-undef": "warn",
-      "no-dupe-if-else": "warn",
+      // "no-dupe-if-else": "warn",
       "no-unreachable": "error",
       "no-use-before-define": "error",
       "use-isnan": "warn",
