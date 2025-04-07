@@ -2,7 +2,6 @@ import { useEditor } from "./stores/Editor/store";
 
 export const LineFillers = () => {
   const { linesCount, lineFillerLimit } = useEditor();
-  console.log(lineFillerLimit);
 
   return (
     <div className="flex flex-col h-full bg-base-300 text-neutral pt-[4px]">

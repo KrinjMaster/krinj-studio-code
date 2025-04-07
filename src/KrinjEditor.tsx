@@ -10,7 +10,13 @@ import {
 } from "@codemirror/view";
 import { history, defaultKeymap, historyKeymap } from "@codemirror/commands";
 import { useEffect, useRef, useState } from "react";
-import { bracketMatching, foldKeymap } from "@codemirror/language";
+import {
+  bracketMatching,
+  defaultHighlightStyle,
+  foldKeymap,
+  HighlightStyle,
+  syntaxHighlighting,
+} from "@codemirror/language";
 import {
   closeBrackets,
   autocompletion,
@@ -23,12 +29,24 @@ import {
   searchKeymap,
 } from "@codemirror/search";
 import { lintKeymap } from "@codemirror/lint";
-import { javascript } from "@codemirror/lang-javascript";
+import {
+  javascript,
+  javascriptLanguage,
+  scopeCompletionSource,
+  autoCloseTags,
+} from "@codemirror/lang-javascript";
 import { LineFillers } from "./LineFillers";
 import { useEditor } from "./stores/Editor/store";
 import { defaultEditorTheme } from "./constants/Editor";
+import { tags } from "@lezer/highlight";
 
 // TODO: working autocomplete at least fo js/ts
+const customHighlightStyle = HighlightStyle.define([
+  { tag: tags.keyword, color: "blue" },
+  { tag: tags.variableName, color: "orange" },
+  { tag: tags.string, color: "green" },
+  { tag: tags.comment, color: "gray" },
+]);
 
 export const KrinjEditor = (params) => {
   const editorRef = useRef<HTMLElement>(null);
@@ -48,7 +66,11 @@ export const KrinjEditor = (params) => {
           ...completionKeymap,
           ...lintKeymap,
         ]),
-        javascript({ typescript: true }),
+        javascript({ typescript: true, jsx: true }),
+        javascriptLanguage.data.of({
+          autocompletion: scopeCompletionSource(window),
+        }),
+        autoCloseTags,
         highlightSelectionMatches(),
         search(),
         autocompletion(),
@@ -59,6 +81,7 @@ export const KrinjEditor = (params) => {
         lineNumbers(),
         highlightActiveLine(),
         highlightActiveLineGutter(),
+        syntaxHighlighting(customHighlightStyle),
         EditorView.updateListener.of((v: ViewUpdate) => {
           if (v.startState.doc.lines !== v.state.doc.lines) {
             updateLinesCount(v.state.doc.lines);
